@@ -294,6 +294,21 @@
   
 
     
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools/" class="md-nav__link">
+        Tools
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -520,7 +535,7 @@
 <p>Die als Semesteraufgabe zu entwickelnde Webanwendung sollte</p>
 <ol>
 <li>ein Frontend besitzen (muss nicht mit einem JavaScript-Framework erstellt werden),</li>
-<li>das Frontend sollte responsive sein,</li>
+<li>das Frontend soll responsive sein (wenn nicht, dann <em>mobile first</em>!),</li>
 <li>ein Backend (damit Daten auf dem Server verwaltet werden können), </li>
 <li>eine Datenbank zur persistenten Speicherung von Daten (wir verwenden MongoDB, kann aber auch MariaDB, MySQL, PostgresQL oder auch SQLite oder ähnlich In-Apps-Datenbanken sein),</li>
 <li>installierbar sein,</li>
@@ -538,8 +553,26 @@
 <li>7 für eine 1,3. </li>
 <li>Ist die Anwendung besonders toll und/oder deployed, kann es auch eine 1,0 werden. </li>
 </ul>
-<p>Bitte erstellen Sie eine aussagekräftige README-Datei. Die erstellte Anwendung soll präsentiert werden und in einem kurzen Gespräch (15-20min) wird die Implementierung besprochen. </p>
-<p>Diese Liste wird noch um weitere Hinweise zur Bewertung angepasst. </p>
+<p>Bitte erstellen Sie eine aussagekräftige <code>README.md</code>-Datei. Die erstellte Anwendung soll präsentiert werden und in einem kurzen Gespräch (15-20min) wird die Implementierung besprochen. </p>
+<p>Hier eine Idee einer Anwendung, eine <em>Ausgabenverwaltung</em>:</p>
+<ul>
+<li>installierbare Webanwendung, </li>
+<li>Formular für die Buchung einer Ausgabe <ul>
+<li>Datum, </li>
+<li>Titel für die Ausgabe, </li>
+<li>Betrag, </li>
+<li>Foto des Kassenzettels, </li>
+<li>evtl. Geolocation des Ausgabeortes</li>
+</ul>
+</li>
+<li>Übersicht über Ausgaben,</li>
+<li>offline verwendbar, d.h. Ausgabe wird in der IndexedDB gespeichert und erst, wenn wieder online, dann in der Datenbank,</li>
+<li>Push-Benachrichtigung, wenn Ausgabe in der Datenbank gespeichert (Hintergrundsynchronisation), </li>
+<li>Backend ist zwingend erforderlich (für Speichern und Abrufen der Daten in die und aus der Datenbank),</li>
+<li>MongoDB zur persitenten Datenspeicherung,</li>
+<li>evtl. Nutzerverwaltung zur Verwaltung der eigenen Ausgaben.</li>
+</ul>
+<p>Sie können natürlich auch eine eigene Anwendungsidee umsetzen! Viel Spaß und Erfolg!   </p>
                 
               
               

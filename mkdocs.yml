@@ -61,4 +61,5 @@ markdown_extensions:
 nav:
     - Home: index.md
     - Einführung: einfuehrung.md
+    - Tools: tools.md 
 

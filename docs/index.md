@@ -44,7 +44,7 @@ Für die Kommunikation untereinander verwenden wir [**Slack**](https://slack.com
 Die als Semesteraufgabe zu entwickelnde Webanwendung sollte
 
 1. ein Frontend besitzen (muss nicht mit einem JavaScript-Framework erstellt werden),
-2. das Frontend sollte responsive sein,
+2. das Frontend soll responsive sein (wenn nicht, dann *mobile first*!),
 3. ein Backend (damit Daten auf dem Server verwaltet werden können), 
 4. eine Datenbank zur persistenten Speicherung von Daten (wir verwenden MongoDB, kann aber auch MariaDB, MySQL, PostgresQL oder auch SQLite oder ähnlich In-Apps-Datenbanken sein),
 5. installierbar sein,
@@ -62,8 +62,24 @@ Von den Punkten 5.-11. sollten
 - 7 für eine 1,3. 
 - Ist die Anwendung besonders toll und/oder deployed, kann es auch eine 1,0 werden. 
 
-Bitte erstellen Sie eine aussagekräftige README-Datei. Die erstellte Anwendung soll präsentiert werden und in einem kurzen Gespräch (15-20min) wird die Implementierung besprochen. 
+Bitte erstellen Sie eine aussagekräftige `README.md`-Datei. Die erstellte Anwendung soll präsentiert werden und in einem kurzen Gespräch (15-20min) wird die Implementierung besprochen. 
 
-Diese Liste wird noch um weitere Hinweise zur Bewertung angepasst. 
+Hier eine Idee einer Anwendung, eine *Ausgabenverwaltung*:
+
+- installierbare Webanwendung, 
+- Formular für die Buchung einer Ausgabe 
+	- Datum, 
+	- Titel für die Ausgabe, 
+	- Betrag, 
+	- Foto des Kassenzettels, 
+	- evtl. Geolocation des Ausgabeortes
+- Übersicht über Ausgaben,
+- offline verwendbar, d.h. Ausgabe wird in der IndexedDB gespeichert und erst, wenn wieder online, dann in der Datenbank,
+- Push-Benachrichtigung, wenn Ausgabe in der Datenbank gespeichert (Hintergrundsynchronisation), 
+- Backend ist zwingend erforderlich (für Speichern und Abrufen der Daten in die und aus der Datenbank),
+- MongoDB zur persitenten Datenspeicherung,
+- evtl. Nutzerverwaltung zur Verwaltung der eigenen Ausgaben.
+
+Sie können natürlich auch eine eigene Anwendungsidee umsetzen! Viel Spaß und Erfolg!   
 
 
