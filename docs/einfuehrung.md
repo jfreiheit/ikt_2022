@@ -152,7 +152,7 @@ Der Service worker läuft auch dann noch, wenn die Anwendung geschlossen ist!
 
 Wenn wir unter [Lighthouse](../tools/#lighthouse) einen Report generieren, dann sieht es zwar prinzipiell schon ganz gut aus, es handelt sich aber auch noch nicht um eine PWA, da sie (noch) nicht installierbar ist. 
 
-[einfuehrung](./files/03_einfuehrung.png)
+![einfuehrung](./files/03_einfuehrung.png)
 
 Wir werden nächste Woche damit beginnen, unsere App installierbar zu machen. Hier "verraten" wir aber bereits, dass wir dazu eine `manifest.json` benötigen. Diese erstellen wir und binden sie in die `index.html` ein:
 

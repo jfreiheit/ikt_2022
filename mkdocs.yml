@@ -61,5 +61,9 @@ markdown_extensions:
 nav:
     - Home: index.md
     - Einführung: einfuehrung.md
+    - Grundgerüst: grundgeruest.md 
+    - Manifest: manifest.md 
+    - Service worker: serviceworker.md 
+    - Promises & Fetch: promises.md 
     - Tools: tools.md 
 
