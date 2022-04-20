@@ -15,7 +15,7 @@ Die folgenden Abbildungen verdeutlichen die Arbeitsweise eines *service workers*
 
 ![javascript](./files/19_serviceworker.png). 
 
-Service worker laufen auf einem eigenen Thread. Service worker werden an HTML-Seiten registriert, laufen aber gänzlich unabhängig von ihnen. Sie laufen sogar dann, wenn die HTML-Seiten geschlossen sind. Service worker laufen im **Hintergrund**, es handelt sich um *Hintergrundprozesse*. Service worker sind zwar JavaScript, maipulieren aber nicht den DOM. Sie sind nicht an HTML-Seiten gebunden, sondern an eine Domain. Service worker reagieren ebenfalls auf Ereignisse, aber andere, als wir sie von Webanwendungen kennnen, z.B. auf Push-Notifikationen. 
+Service worker laufen auf einem eigenen Thread. Service worker werden an HTML-Seiten registriert, laufen aber gänzlich unabhängig von ihnen. Sie laufen sogar dann, wenn die HTML-Seiten geschlossen sind. Service worker laufen im **Hintergrund**, es handelt sich um *Hintergrundprozesse*. Service worker sind zwar JavaScript, manipulieren aber nicht den DOM. Sie sind nicht an HTML-Seiten gebunden, sondern an eine Domain. Service worker reagieren ebenfalls auf Ereignisse, aber andere, als wir sie von Webanwendungen kennnen, z.B. auf Push-Notifikationen. 
 
 ![javascript](./files/20_serviceworker.png). 
 
@@ -45,7 +45,7 @@ Es kann passieren, dass in einer Webanwendung Ereignisse ausgeführt werden, jed
 
 #### Service-worker-Lifecycle-Ereignisse
 
-Ein service worker durchläuft selbst einen eigenen "Lebenszyklus". Wir kennen Liefecycle-Events bereits aus Angular, z.B. `ngOnInit()`. Solche Lifecycle-Events existieren auch für service worker. Wir werden sie uns später im Detail anschauen. Zuerst betrachten wir aber zur Einführung ein einfaches Beispiel für die Verwendung eines *service workers* (wie wir gleich im Anschluss dikutieren werden, handelt es sich eigentlich um einen *web worker*). 
+Ein service worker durchläuft selbst einen eigenen "Lebenszyklus". Wir kennen Liefecycle-Events bereits aus Angular, z.B. `ngOnInit()` oder auch von Webseiten (`load`). Solche Lifecycle-Events existieren auch für service worker. Wir werden sie uns später im Detail anschauen. Zuerst betrachten wir aber zur Einführung ein einfaches Beispiel für die Verwendung eines *service workers* (wie wir gleich im Anschluss dikutieren werden, handelt es sich eigentlich um einen *web worker*). 
 
 ## Einfaches Beispiel service worker
 
@@ -116,7 +116,7 @@ Die prinzipielle Idee der Registrierung eines service workers sieht so aus:
 
 ![service worker](./files/21_serviceworker.png)
 
-Die beiden Lifecycle-Events `install` und `activate` sind bereits eingezeichnet. Dabei ist zu betonen, dass ein *service worker*  erst dann aktiviert werden kann, wenn kein anderer service worker mehr (in der gleichen Domäne/im gleichen Scope) läuft. Ein anderer service worker, der eventuell noch läuft, muss erst geschlossen werden, bevor der neue service worker das `activate`-Ereignis auslösen kann. Damit ein solcher "alter" service worker geschlossen werden kann, müssen zumindest alle Tabs im Browser, in denen die Webanwendung läuft, geschlossen werden. Selbst dann läuft der service worker aber immernoch weiter. Er muss explizit geschlossen werden. das zeigen wir später. 
+Die beiden Lifecycle-Events `install` und `activate` sind bereits eingezeichnet. Dabei ist zu betonen, dass ein *service worker*  erst dann aktiviert werden kann, wenn kein anderer service worker mehr (in der gleichen Domäne/im gleichen Scope) läuft. Ein anderer service worker, der eventuell noch läuft, muss erst geschlossen werden, bevor der neue service worker das `activate`-Ereignis auslösen kann. Damit ein solcher "alter" service worker geschlossen werden kann, müssen zumindest alle Tabs im Browser, in denen die Webanwendung läuft, geschlossen werden. Selbst dann läuft der service worker aber immernoch weiter. Er muss explizit geschlossen werden. Das zeigen wir später. 
 
 ### Registrierung eines service workers
 
@@ -213,7 +213,7 @@ Zunächst beachten wir noch einen besonderen Eintrag in der `package.json`:
 	  "author": "J. freiheit",
 	  "license": "ISC",
 	  "devDependencies": {
-	    "http-server": "^0.12.3"
+	    "http-server": "^14.1.0"
 	  }
 	}
 	```
@@ -263,7 +263,7 @@ Nun implementieren wir den service worker. Wir haben ihn bereits registriert, ab
 
 Wir melden uns also an zwei Ereignisse an: an das `install`-Ereignis und das `activate`-Ereignis. Beide Ereignisse sind auch gut [hier](https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle) beschrieben. Beide Ereignisbehandlungen sind zunächst einfache Ausgaben auf die Konsole.
 
-Zwei Sachen sind noch erwähnenswert: erstens wird `self` verwendet, um auf den service worker zu referenzieren. Für Erläuterungen über den Unterschied von `this` und `self` können Sie sich z.B. [hier](https://stackoverflow.com/questions/16875767/difference-between-this-and-self-in-javascript/38549303#:~:text=So%2C%20within%20the%20inner%20function,reference%20to%20the%20inner%20function.) informieren. Grundsätzlich ist es so, dass mit `self` auf den gesamten Scope referenziert wird. In Webanwendungen ist der Scope häufig `window`, hier ist es aber die Domain, die den Scope des service workers beschreibt. Wir referenzieren also nicht auf den service worker selbst, sondern auf seinen Scope. 
+Zwei Sachen sind noch erwähnenswert: erstens wird `self` verwendet, um auf den service worker zu referenzieren. Für Erläuterungen über den Unterschied von `this` und `self` können Sie sich z.B. [hier](https://stackoverflow.com/questions/16875767/difference-between-this-and-self-in-javascript/) informieren. Grundsätzlich ist es so, dass mit `self` auf den gesamten Scope referenziert wird. In Webanwendungen ist der Scope häufig `window`, hier ist es aber die Domain, die den Scope des service workers beschreibt. Wir referenzieren also nicht auf den service worker selbst, sondern auf seinen Scope. 
 
 Die zweite erwähnenswerte Sache steht in Zeile `7`. Wenn ein service worker registriert ist, dann "kontrolliert" er nicht automatisch alle Webseiten in seiner Domain. Erst durch das Neuladen dieser Seiten gelangen sie unter seine Kontrolle. Mithilfe der `claim()`-Funktion aus dem Interface `Clients` übernimmt der service worker die Kontrolle aber sofort, d.h. ohne ein Neuladen der Site. Einzige Ausnahme ist die Seite, die aktuell im Browser gezeigt wird. Für diese muss tatsächlich ein Reload durchgeführt werden. Weitere Informationen dazu finden Sie auch [hier](https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle).
 
