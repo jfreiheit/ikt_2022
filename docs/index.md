@@ -29,13 +29,39 @@ Nachfolgend der vorläufige Wochenplan (wird eventuell angepasst). Die Vorlesung
 
 ### Organisatorisches 
 
-Zur erfolgreichen Durchführung der Veranstaltung müssen Sie die Übungen lösen und zu den jeweiligen Fristen per Git auf einen Server (GitHub oder GitLab) laden. Am Ende des Semesters ist eine Aufgabe abzugeben. Diese Aufgabe wird bewertet. Die Bewertung entspricht dann der Modulnote. 
+Zur erfolgreichen Durchführung der Veranstaltung müssen Sie am Ende des Semesters die Lösung Ihrer Semesteraufgabe abgeben. Diese Aufgabe zusammen mit einem Gespräch, das wir über Ihre Lösung führen, wird bewertet. Die Bewertung entspricht dann der Modulnote. 
 
-Hier sind die Übungen beschrieben, die Sie in jeder Woche ausführen sollen. Damit Sie dies erfolgreich erledigen können, ist jeweils angegeben, welche Themen Sie dafür durcharbeiten müssen. Das Durcharbeiten der jeweiligen Themen entspricht jeweils einer Vorlesung. Diese wird also selbständig durchgeführt. 
+Die Übungen sind dafür vorgesehen, dass Sie im Semester sukzessive Ihre Lösung erstellen können. Wir beantworten in den Übungen Ihre Fragen und lösen gemeinsam Probleme. Jede Woche gibt es ein Thema, das Sie selbständig durcharbeiten und dann angepasst in Ihre Lösung integrieren können.  
 
 Für die Kommunikation untereinander verwenden wir [**Slack**](https://slack.com/intl/de-de/). Dort können Sie alle inhaltlichen und organisatorischen Fragen stellen. Ich fände es gut, wenn ich dort möglichst wenig Fragen - zumindest die inhaltlichen - beantworten müsste, sondern eine Art internes **Diskussionsforum** entsteht. Es ist sehr gewünscht, dort Fragen zu stellen und noch mehr gewünscht, diese **von Ihnen dort beantwortet** zu sehen. Damit wäre allen geholfen und ich kann besser erkennen, wo noch Nachhol- bzw. Erläuterungsbedarf bei den meisten besteht. Außerdem lernen Sie beim Beantworten der Fragen nochmals deutlich mehr. Das wäre super, wenn das klappt!
 
 ### Inhalte
+
+Hier sind die Videos aus **2021** verlinkt!!! (auf Wunsch) Der aktuelle Stoff ist aber teilweise abgeändert und angepasst! Insbesondere werden wir 2022 MongoDB als Datenbank verwenden und nicht PostgresQL. Außerdem haben sich wieder einige APIs seit 2021 geändert. 
+
+##### Woche 1 (Grundgerüst)
+
+??? question "Woche 1 - Grundgerüst"
+
+	<iframe src="https://mediathek.htw-berlin.de/media/embed?key=9acae2bf623912843d1298721c67867a&width=720&height=405&autoplay=false&autolightsoff=false&loop=false&chapters=false&related=false&responsive=false&t=0" data-src="" class="iframeLoaded" width="720" height="405" frameborder="0" allowfullscreen="allowfullscreen" allowtransparency="true" scrolling="no"></iframe>
+
+
+##### Woche 2 (Manifest)
+
+??? question "Woche 2 - Manifest"
+
+	- Diese Woche wird unsere App mithilfe des [Application Manifest](./manifest/#web-app-manifest) **installierbar**. Dazu gibt es folgendes Video: 
+		<iframe src="https://mediathek.htw-berlin.de/media/embed?key=247bb388ae29a4d849a3fcff5fae95db&width=720&height=450&autoplay=false&autolightsoff=false&loop=false&chapters=false&related=false&responsive=false&t=0" data-src="" class="iframeLoaded" width="720" height="450" frameborder="0" allowfullscreen="allowfullscreen" allowtransparency="true" scrolling="no"></iframe>
+
+
+
+##### Woche 3 (Promises und Fetch API)
+
+??? question "Woche 3 - Promises und Fetch API"
+
+	- Diese Woche betrachten wir den Lebenszyklus eines Service Workers, schauen uns Promises und die Fetch API an. Dazu dieses Video:
+		<iframe src="https://mediathek.htw-berlin.de/media/embed?key=71d02c5d395a874c9b2b4821a140dc7f&width=720&height=389&autoplay=false&autolightsoff=false&loop=false&chapters=false&related=false&responsive=false&t=0" data-src="" class="iframeLoaded" width="720" height="389" frameborder="0" allowfullscreen="allowfullscreen" allowtransparency="true" scrolling="no"></iframe>
+	- Sourcecode zur Vorlesung am 05.05.2021 (also alt!!!) [hier zum Herunterladen](./files/03_promise.zip)
 
 
 
