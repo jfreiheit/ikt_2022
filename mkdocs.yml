@@ -65,5 +65,6 @@ nav:
     - Manifest: manifest.md 
     - Service worker: serviceworker.md 
     - Promises & Fetch: promises.md 
+    - Caching: caching.md 
     - Tools: tools.md 
 
