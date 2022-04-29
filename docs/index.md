@@ -65,6 +65,17 @@ Hier sind die Videos aus **2021** verlinkt!!! (auf Wunsch) Der aktuelle Stoff is
 
 
 
+##### Woche 4 (Caching)
+
+??? question "Woche 4 - Caching"
+
+	- Diese Woche wird die App mithilfe von [Caching](./caching/#caching-mit-service-workern) auch offline nutzbar.
+	- Video zur Vorlesung am 12.05.2021
+		<iframe src="https://mediathek.htw-berlin.de/media/embed?key=bf498f35fe78e01a22d5fa909d4c4be8&width=720&height=389&autoplay=false&autolightsoff=false&loop=false&chapters=false&related=false&responsive=false&t=0" data-src="" class="iframeLoaded" width="720" height="389" frameborder="0" allowfullscreen="allowfullscreen" allowtransparency="true" scrolling="no"></iframe>
+	- Sourcecode zur Vorlesung am 12.05.2021 (also alt!!!) [hier zum Herunterladen](./files/04_caching.zip)
+
+
+
 ### Semesteraufgabe
 
 Die als Semesteraufgabe zu entwickelnde Webanwendung sollte

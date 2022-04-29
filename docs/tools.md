@@ -55,6 +55,15 @@ Bei der Erstellung Ihrer `manifest.json` können Sie sich auch unterstützen las
 
 [Workbox](https://developers.google.com/web/tools/workbox) ist eine JavaScript-Bibliothek, die alle wesentlichen Funktionalitäten von *Service Workern* bereitstellt. 
 
+
+## MongoDB Compass
+
+Um sich Ihre MongoDB-datenbanken anzuschauen, empfehle ich Ihnen das Tool [MongoDB Compass](https://www.mongodb.com/de-de/products/compass). Download und Installation sind normalerweise einfach. 
+
+## Insomnia REST
+
+Eine gute Alternative zu Postman ist [Insomnia](https://insomnia.rest/). Sehr empfehlenswert! Aber Postman auch.
+
 ## Interssante Links zu PWA
 
 - [PWA Checklist](https://web.dev/pwa-checklist/)
