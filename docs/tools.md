@@ -55,10 +55,13 @@ Bei der Erstellung Ihrer `manifest.json` können Sie sich auch unterstützen las
 
 [Workbox](https://developers.google.com/web/tools/workbox) ist eine JavaScript-Bibliothek, die alle wesentlichen Funktionalitäten von *Service Workern* bereitstellt. 
 
+## MongoDB
+
+Es gibt zwei Möglichkeiten, [MongoDB](https://www.mongodb.com/) zu verwenden: entweder Sie nutzen das Cloud-Angebot, also eine Remote-MongoDB. Diese nennt sich [MongoDB Atlas](https://www.mongodb.com/atlas/database). Oder Sie installieren sich die MongoDB "on-premise", also lokal auf Ihrem Rechner. Dazu wählen Sie unter `mongodb.com` den Reiter `Products` on dort unter `Community Edition` den Link `Community Server`. Dann landen Sie auf [https://www.mongodb.com/try/download/community](https://www.mongodb.com/try/download/community). Dort können Sie sich die MongoDB herunterladen und installieren. Installationsanleitungen finden Sie unter [https://www.mongodb.com/docs/manual/installation/](https://www.mongodb.com/docs/manual/installation/). Wichtig ist, dass die MongoDB einmalig mit `mongod` starten.
 
 ## MongoDB Compass
 
-Um sich Ihre MongoDB-datenbanken anzuschauen, empfehle ich Ihnen das Tool [MongoDB Compass](https://www.mongodb.com/de-de/products/compass). Download und Installation sind normalerweise einfach. 
+Um sich Ihre MongoDB-Datenbanken anzuschauen (und auch, um Operationen darauf auszuführen), empfehle ich Ihnen das Tool [MongoDB Compass](https://www.mongodb.com/de-de/products/compass). Download und Installation sind normalerweise einfach. 
 
 ## Insomnia REST
 
