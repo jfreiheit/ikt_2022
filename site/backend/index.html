@@ -543,6 +543,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#zum-verstandnis" class="md-nav__link">
+    Zum Verständnis
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#post-kompletter-datensatz" class="md-nav__link">
     POST - kompletter Datensatz
   </a>
@@ -559,6 +566,27 @@
           <li class="md-nav__item">
   <a href="#get-alle-datensatze" class="md-nav__link">
     GET - alle Datensätze
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-einen-datensatz" class="md-nav__link">
+    DELETE - einen Datensatz
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zusammenfassung-code-des-backends" class="md-nav__link">
+    Zusammenfassung - Code des Backends
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zusammenfassung-die-mongodb-posts" class="md-nav__link">
+    Zusammenfassung - die MongoDB posts
   </a>
   
 </li>
@@ -826,6 +854,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#zum-verstandnis" class="md-nav__link">
+    Zum Verständnis
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#post-kompletter-datensatz" class="md-nav__link">
     POST - kompletter Datensatz
   </a>
@@ -842,6 +877,27 @@
           <li class="md-nav__item">
   <a href="#get-alle-datensatze" class="md-nav__link">
     GET - alle Datensätze
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-einen-datensatz" class="md-nav__link">
+    DELETE - einen Datensatz
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zusammenfassung-code-des-backends" class="md-nav__link">
+    Zusammenfassung - Code des Backends
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zusammenfassung-die-mongodb-posts" class="md-nav__link">
+    Zusammenfassung - die MongoDB posts
   </a>
   
 </li>
@@ -1878,6 +1934,10 @@ Wir fügen <code>dotenv</code> in die <code>server.js</code> ein und greifen mit
 </div>
 <h2 id="erweiterung-um-das-speichern-von-bildern">Erweiterung um das Speichern von Bildern<a class="headerlink" href="#erweiterung-um-das-speichern-von-bildern" title="Permanent link">&para;</a></h2>
 <p>Bis jetzt haben wir nur Daten im JSON-Format zwischen Frontend und Backend ausgetauscht und auch nur solche Daten in der MongoDB gespeichert. Bilder (und auch andere Dateien) sind <a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects">FormData-Objects</a> im <code>multipart/form-data</code>-Format. Zur Behandlung solcher Daten verwenden wir ein <em>Middleware</em> für unser Backend, namens <a href="https://www.npmjs.com/package/multer">Multer</a>. </p>
+<div class="admonition hint">
+<p class="admonition-title">Hint<p>Wenn Sie nur am Code für unser Backend interessiert sind, dann können Sie auch direkt zu <a href="./#zusammenfuhren-der-funktionalitaten">Zusammenführen der Funktionalitäten</a> springen. Im Folgenden werden die Entstehung aber näher erläutert und verschiedene Varianten diskutiert. </p>
+</p>
+</div>
 <p>MongoDB speichert Daten bis zu einer Größe von <code>16Mb</code> im Binärformat. Um auch größere Dateien (Bilder, Videos, pdf, ...) speichern zu können, werden die Dateien in <em>chunks</em> zerlegt und können dann aus diesen Stücken wieder zusammengesetzt werden. Dafür gibt es in der MongoDB eine <a href="https://docs.mongodb.com/manual/core/gridfs/">GridFS</a>-Spezifikation (siehe auch <a href="https://medium.com/@kavitanambissan/uploading-and-retrieving-a-file-from-gridfs-using-multer-958dfc9255e8">hier</a> oder <a href="https://www.topcoder.com/thrive/articles/storing-large-files-in-mongodb-using-gridfs">hier</a>). Zur Verwendung von GridFS gibt es die beiden Pakte <a href="https://www.npmjs.com/package/multer-gridfs-storage">multer-gridfs-storage</a> und <a href="https://www.npmjs.com/package/gridfs-stream">gridfs-stream</a>. </p>
 <p>Wir installieren im Backend-Projekt alle drei Pakete und zeigen im Folgenden deren Verwendung:</p>
 <div class="highlight"><pre><span></span><code>npm install multer multer-gridfs-storage gridfs-stream
@@ -2850,6 +2910,44 @@ Wir fügen <code>dotenv</code> in die <code>server.js</code> ein und greifen mit
 </tbody>
 </table>
 <p>Das bedeutet, wir binden den Upload und Download von Bildern nun in unsere <code>posts</code>-Routen ein. Die Funktionen werden dabei "etwas" umfangreicher. </p>
+<h3 id="zum-verstandnis">Zum Verständnis<a class="headerlink" href="#zum-verstandnis" title="Permanent link">&para;</a></h3>
+<p>Wir verwenden <a href="https://www.npmjs.com/package/multer">Multer</a> und <a href="https://www.npmjs.com/package/multer-gridfs-storage">GridFs storage</a>. Multer ist eine <em>Middleware</em> für Node.js, um Daten im <code>multipart/form-data</code>-Format zu verwalten. Die grundsätzliche Idee ist, dass im <em>Request</em> nicht nur ein <code>body</code>, sondern auch eine <code>file</code>-Eigenschaft enthalten ist (neben dem <code>header</code>). Multer verwendet einen <code>storage</code>, um Bilder (oder andere Dateien) zu speichern. Einen solchen <code>storage</code> bietet <code>GridFs storage</code>. Dieser kann sogar Dateien größer als 16 MB speichern und die Idee dabei ist, dass die Datei in zwei Collections gespeichert wird, in der <code>files</code>-Collection, welche die (Meta-)Informationen der Datei speichert und der <code>chunks</code>-Collection, die die eigentliche Datei (als Binärdaten) speichert. Eine Datei kann dabei in mehrere <code>chunks</code> unterteilt werden. Die folgende Abbildung zeigt das Prinzip von <code>GridFS</code>:</p>
+<p><img alt="upload" src="../files/251_file.png" /></p>
+<p>Für unser Datenmodell sieht die Auteilung der Daten somit wie folgt aus:</p>
+<ul>
+<li>
+<p>in der <code>posts</code>-Collection speichern wir</p>
+<ul>
+<li>die <code>_id</code> des Posts,</li>
+<li>den <code>title</code> eines Posts,</li>
+<li>die <code>location</code> und </li>
+<li>die <code>image_id</code>. Die <code>image_id</code> enthält den Dateinamen <code>filename</code> des Bildes.</li>
+</ul>
+</li>
+<li>
+<p>in der <code>posts.files</code>-Collection speichern wir (GridFs)</p>
+<ul>
+<li>die <code>_id</code> der Datei,</li>
+<li>die <code>length</code> der Datei,</li>
+<li>die <code>chunkSize</code>, </li>
+<li>das <code>uploadDate</code>, </li>
+<li>den <code>filename</code> (siehe in <code>posts</code> die <code>image_id</code>) und </li>
+<li>den <code>contenType</code> (z.B. <code>image/jpeg</code>)</li>
+</ul>
+</li>
+<li>
+<p>in der <code>posts.chunks</code>-Collection speichern wir (GridFs)</p>
+<ul>
+<li>die <code>_id</code> des Chunks,</li>
+<li>die <code>files_id</code> (diese entspricht der <code>_id</code> der Datei in der <code>posts.files</code>-Collection),</li>
+<li>ein <code>n</code> (fortlaufende Nummerierung der Chunks einer Datei beginnend mit <code>0</code>),</li>
+<li>die <code>data</code> der Datei (in diesem Chunk)</li>
+</ul>
+</li>
+</ul>
+<p>Chunks kann es zu einer Datei mehrere geben. Alle <code>data</code> aller Chunks einer Datei bilden zusammen die Datei als Binär- (bzw. base64-) Daten. Die folgende Abbildung zeigt unser Datenmodell in der Datenbank <code>posts</code>:</p>
+<p><img alt="upload" src="../files/251_file.png" /></p>
+<p>Um z.B. einen Datensatz (einen Post) anzulegen, speichern wir also die zugehörigen Daten in der <code>posts</code>-Collection (inkl. dem <code>filename</code> der Datei), speichern die Meta-Informationen der Datei in der <code>posts.files</code>-Collection und die zugehörigen Binärdaten der Datei in <code>posts.chunks</code>. </p>
 <h3 id="post-kompletter-datensatz">POST - kompletter Datensatz<a class="headerlink" href="#post-kompletter-datensatz" title="Permanent link">&para;</a></h3>
 <p>Die <code>POST</code>-Funktion für einen Datensatz ist nicht viel umfangreicher als zuvor:</p>
 <div class="tabbed-set" data-tabs="26:1"><input checked="checked" id="__tabbed_26_1" name="__tabbed_26" type="radio" /><label for="__tabbed_26_1">aus routes/posts.routes.js</label><div class="tabbed-content"></div>
@@ -3107,6 +3205,500 @@ Wir fügen <code>dotenv</code> in die <code>server.js</code> ein und greifen mit
 <span class="p">});</span>
 </code></pre></div>
 </td></tr></table>
+<h3 id="delete-einen-datensatz">DELETE - einen Datensatz<a class="headerlink" href="#delete-einen-datensatz" title="Permanent link">&para;</a></h3>
+<p>Wird ein Post gelöscht, müssen wir auch dafür sorgen, dass das zugehörige Bild aus der <code>posts.files</code> und der <code>posts.chunks</code> gelöscht wird. Das Löschen ist also dreistufig:</p>
+<div class="tabbed-set" data-tabs="32:1"><input checked="checked" id="__tabbed_32_1" name="__tabbed_32" type="radio" /><label for="__tabbed_32_1">aus routes/posts.routes.js</label><div class="tabbed-content"></div>
+</div>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="c1">// DELETE one post via id</span>
+<span class="nx">router</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s1">&#39;/:id&#39;</span><span class="p">,</span> <span class="k">async</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">post</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">_id</span><span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span> <span class="p">})</span>
+        <span class="kd">let</span> <span class="nx">fileName</span> <span class="o">=</span> <span class="nx">post</span><span class="p">.</span><span class="nx">image_id</span><span class="p">;</span>
+        <span class="k">await</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">deleteOne</span><span class="p">({</span> <span class="nx">_id</span><span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span> <span class="p">});</span>
+        <span class="k">await</span> <span class="nx">collectionFiles</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">filename</span><span class="o">:</span> <span class="nx">fileName</span><span class="p">}).</span><span class="nx">toArray</span><span class="p">(</span> <span class="k">async</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">docs</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">await</span> <span class="nx">collectionChunks</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">({</span><span class="nx">files_id</span> <span class="o">:</span> <span class="nx">docs</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">_id</span><span class="p">});</span>
+        <span class="p">})</span>
+        <span class="k">await</span> <span class="nx">collectionFiles</span><span class="p">.</span><span class="nx">deleteOne</span><span class="p">({</span><span class="nx">filename</span><span class="o">:</span> <span class="nx">fileName</span><span class="p">});</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">204</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">)</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="nx">error</span><span class="o">:</span> <span class="s2">&quot;Post does not exist!&quot;</span> <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+</td></tr></table>
+<h3 id="zusammenfassung-code-des-backends">Zusammenfassung - Code des Backends<a class="headerlink" href="#zusammenfassung-code-des-backends" title="Permanent link">&para;</a></h3>
+<p>Hier nochmal alle wichtigen Dateien unseres Backends:</p>
+<div class="tabbed-set" data-tabs="33:1"><input checked="checked" id="__tabbed_33_1" name="__tabbed_33" type="radio" /><label for="__tabbed_33_1">server.js</label><div class="tabbed-content"></div>
+</div>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">cors</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;cors&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">postsRoutes</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./routes/posts.routes&#39;</span><span class="p">);</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;dotenv&#39;</span><span class="p">).</span><span class="nx">config</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">mongoose</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongoose&#39;</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="mf">3000</span><span class="p">;</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">());</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/posts&#39;</span><span class="p">,</span> <span class="nx">postsRoutes</span><span class="p">)</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`server running on http://localhost:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="cm">/* die folgende Verbindung brauchen wir gar nicht, wird jeweils bei Bedarf erzeugt (mongoose) */</span>
+<span class="nx">mongoose</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DB_CONNECTION</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useNewUrlParser</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">useUnifiedTopology</span><span class="o">:</span> <span class="kc">true</span> <span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span>
+    <span class="p">()</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;connected to BD&#39;</span><span class="p">)</span>
+<span class="p">).</span><span class="k">catch</span><span class="p">(</span>
+    <span class="nx">err</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="s1">&#39;conncetion error&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">connection</span><span class="p">;</span>
+</code></pre></div>
+</td></tr></table>
+<div class="tabbed-set" data-tabs="34:1"><input checked="checked" id="__tabbed_34_1" name="__tabbed_34" type="radio" /><label for="__tabbed_34_1">middleware/upload.js</label><div class="tabbed-content"></div>
+</div>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">multer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;multer&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">GridFsStorage</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;multer-gridfs-storage&#39;</span><span class="p">);</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;dotenv&#39;</span><span class="p">).</span><span class="nx">config</span><span class="p">();</span>
+
+<span class="kd">const</span> <span class="nx">storage</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">GridFsStorage</span><span class="p">({</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DB_CONNECTION</span><span class="p">,</span>
+    <span class="nx">options</span><span class="o">:</span> <span class="p">{</span> <span class="nx">useNewUrlParser</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">useUnifiedTopology</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span>
+    <span class="nx">file</span><span class="o">:</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">file</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">match</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;image/png&quot;</span><span class="p">,</span> <span class="s2">&quot;image/jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;image/jpeg&quot;</span><span class="p">];</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">match</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">file</span><span class="p">.</span><span class="nx">mimetype</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mf">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="sb">`</span><span class="si">${</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="si">}</span><span class="sb">-jf-</span><span class="si">${</span><span class="nx">file</span><span class="p">.</span><span class="nx">originalname</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="nx">bucketName</span><span class="o">:</span> <span class="s1">&#39;posts&#39;</span><span class="p">,</span>
+            <span class="nx">filename</span><span class="o">:</span> <span class="sb">`</span><span class="si">${</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="si">}</span><span class="sb">-jf-</span><span class="si">${</span><span class="nx">file</span><span class="p">.</span><span class="nx">originalname</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span> 
+            <span class="nx">request</span><span class="o">:</span> <span class="nx">req</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nx">storage</span><span class="p">)</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">multer</span><span class="p">({</span> <span class="nx">storage</span> <span class="p">});</span>
+</code></pre></div>
+</td></tr></table>
+<div class="tabbed-set" data-tabs="35:1"><input checked="checked" id="__tabbed_35_1" name="__tabbed_35" type="radio" /><label for="__tabbed_35_1">routes/posts.routes.js</label><div class="tabbed-content"></div>
+</div>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">  1</span>
+<span class="normal">  2</span>
+<span class="normal">  3</span>
+<span class="normal">  4</span>
+<span class="normal">  5</span>
+<span class="normal">  6</span>
+<span class="normal">  7</span>
+<span class="normal">  8</span>
+<span class="normal">  9</span>
+<span class="normal"> 10</span>
+<span class="normal"> 11</span>
+<span class="normal"> 12</span>
+<span class="normal"> 13</span>
+<span class="normal"> 14</span>
+<span class="normal"> 15</span>
+<span class="normal"> 16</span>
+<span class="normal"> 17</span>
+<span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">router</span> <span class="o">=</span> <span class="nx">express</span><span class="p">.</span><span class="nx">Router</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">Post</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../models/posts&#39;</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">upload</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../middleware/upload&#39;</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">mongoose</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongoose&#39;</span><span class="p">)</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;dotenv&#39;</span><span class="p">).</span><span class="nx">config</span><span class="p">()</span>
+
+<span class="cm">/* ----------------- POST ---------------------------- */</span>
+
+<span class="c1">// POST one post</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="nx">upload</span><span class="p">.</span><span class="nx">single</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">),</span> <span class="k">async</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">file</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+            <span class="s2">&quot;message&quot;</span><span class="o">:</span> <span class="s2">&quot;no file selected&quot;</span>
+        <span class="p">})</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">newPost</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Post</span><span class="p">({</span>
+            <span class="nx">title</span><span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+            <span class="nx">location</span><span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">location</span><span class="p">,</span>
+            <span class="nx">image_id</span><span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">filename</span>
+        <span class="p">})</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;newPost&#39;</span><span class="p">,</span> <span class="nx">newPost</span><span class="p">)</span>
+        <span class="k">await</span> <span class="nx">newPost</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">newPost</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="cm">/* ----------------- GET ---------------------------- */</span>
+
+<span class="kd">const</span> <span class="nx">connect</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">createConnection</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DB_CONNECTION</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useNewUrlParser</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">useUnifiedTopology</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+<span class="kd">const</span> <span class="nx">collectionFiles</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="s1">&#39;posts.files&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">collectionChunks</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="s1">&#39;posts.chunks&#39;</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">getOnePost</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="ow">new</span> <span class="nb">Promise</span><span class="p">(</span> <span class="k">async</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">post</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">_id</span><span class="o">:</span> <span class="nx">id</span> <span class="p">});</span>
+            <span class="kd">let</span> <span class="nx">fileName</span> <span class="o">=</span> <span class="nx">post</span><span class="p">.</span><span class="nx">image_id</span><span class="p">;</span>
+
+            <span class="nx">collectionFiles</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">filename</span><span class="o">:</span> <span class="nx">fileName</span><span class="p">}).</span><span class="nx">toArray</span><span class="p">(</span> <span class="k">async</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">docs</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+
+                <span class="c1">// sort({n: 1}) --&gt; die chunks nach Eigenschaft n aufsteigend sortieren</span>
+                <span class="nx">collectionChunks</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">files_id</span> <span class="o">:</span> <span class="nx">docs</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">_id</span><span class="p">}).</span><span class="nx">sort</span><span class="p">({</span><span class="nx">n</span><span class="o">:</span> <span class="mf">1</span><span class="p">}).</span><span class="nx">toArray</span><span class="p">(</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chunks</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+
+                    <span class="kd">const</span> <span class="nx">fileData</span> <span class="o">=</span> <span class="p">[];</span>
+                    <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">chunk</span> <span class="k">of</span> <span class="nx">chunks</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="c1">// console.log(&#39;chunk._id&#39;, chunk._id)</span>
+                        <span class="nx">fileData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">chunk</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">let</span> <span class="nx">base64file</span> <span class="o">=</span> <span class="s1">&#39;data:&#39;</span> <span class="o">+</span> <span class="nx">docs</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">contentType</span> <span class="o">+</span> <span class="s1">&#39;;base64,&#39;</span> <span class="o">+</span> <span class="nx">fileData</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+                    <span class="kd">let</span> <span class="nx">getPost</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Post</span><span class="p">({</span>
+                        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+                        <span class="s2">&quot;location&quot;</span><span class="o">:</span> <span class="nx">post</span><span class="p">.</span><span class="nx">location</span><span class="p">,</span> 
+                        <span class="s2">&quot;image_id&quot;</span><span class="o">:</span> <span class="nx">base64file</span>
+                    <span class="p">});</span>
+
+                    <span class="nx">resolve</span><span class="p">(</span><span class="nx">getPost</span><span class="p">)</span>
+                <span class="p">})</span>
+
+            <span class="p">})</span> <span class="c1">// toArray find filename</span>
+
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+            <span class="nx">reject</span><span class="p">(</span><span class="ow">new</span> <span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;Post does not exist!&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getAllPosts</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="ow">new</span> <span class="nb">Promise</span><span class="p">(</span> <span class="k">async</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">sendAllPosts</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">const</span> <span class="nx">allPosts</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">find</span><span class="p">();</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="k">for</span><span class="p">(</span><span class="kd">const</span> <span class="nx">post</span> <span class="k">of</span> <span class="nx">allPosts</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="nx">post</span><span class="p">)</span>
+                <span class="kd">const</span> <span class="nx">onePost</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getOnePost</span><span class="p">(</span><span class="nx">post</span><span class="p">.</span><span class="nx">_id</span><span class="p">);</span>
+                <span class="nx">sendAllPosts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">onePost</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;sendAllPosts&#39;</span><span class="p">,</span> <span class="nx">sendAllPosts</span><span class="p">)</span>
+            <span class="nx">resolve</span><span class="p">(</span><span class="nx">sendAllPosts</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+                <span class="nx">reject</span><span class="p">(</span><span class="ow">new</span> <span class="ne">Error</span><span class="p">(</span><span class="s2">&quot;Posts do not exist!&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// GET one post via id</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/:id&#39;</span><span class="p">,</span> <span class="k">async</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">getOnePost</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="p">(</span><span class="nx">post</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="nx">post</span><span class="p">);</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">post</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">);</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+            <span class="nx">error</span><span class="o">:</span> <span class="s2">&quot;Post does not exist!&quot;</span>
+        <span class="p">});</span>
+    <span class="p">})</span>
+<span class="p">});</span>
+
+<span class="c1">// GET all posts</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">async</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+
+    <span class="nx">getAllPosts</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="p">(</span><span class="nx">posts</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">posts</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">);</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span>
+            <span class="nx">error</span><span class="o">:</span> <span class="s2">&quot;Post do not exist!&quot;</span>
+        <span class="p">});</span>
+    <span class="p">})</span>
+<span class="p">});</span>
+
+
+<span class="cm">/* ----------------- DELETE ---------------------------- */</span>
+
+<span class="c1">// DELETE one post via id</span>
+<span class="nx">router</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s1">&#39;/:id&#39;</span><span class="p">,</span> <span class="k">async</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">post</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">_id</span><span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span> <span class="p">})</span>
+        <span class="kd">let</span> <span class="nx">fileName</span> <span class="o">=</span> <span class="nx">post</span><span class="p">.</span><span class="nx">image_id</span><span class="p">;</span>
+        <span class="k">await</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">deleteOne</span><span class="p">({</span> <span class="nx">_id</span><span class="o">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span> <span class="p">});</span>
+        <span class="k">await</span> <span class="nx">collectionFiles</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="nx">filename</span><span class="o">:</span> <span class="nx">fileName</span><span class="p">}).</span><span class="nx">toArray</span><span class="p">(</span> <span class="k">async</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">docs</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">await</span> <span class="nx">collectionChunks</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">({</span><span class="nx">files_id</span> <span class="o">:</span> <span class="nx">docs</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">_id</span><span class="p">});</span>
+        <span class="p">})</span>
+        <span class="k">await</span> <span class="nx">collectionFiles</span><span class="p">.</span><span class="nx">deleteOne</span><span class="p">({</span><span class="nx">filename</span><span class="o">:</span> <span class="nx">fileName</span><span class="p">});</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">204</span><span class="p">).</span><span class="nx">send</span><span class="p">()</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">)</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="nx">error</span><span class="o">:</span> <span class="s2">&quot;Post does not exist!&quot;</span> <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">router</span><span class="p">;</span>
+</code></pre></div>
+</td></tr></table>
+<div class="tabbed-set" data-tabs="36:1"><input checked="checked" id="__tabbed_36_1" name="__tabbed_36" type="radio" /><label for="__tabbed_36_1">.env</label><div class="tabbed-content"></div>
+</div>
+<div class="highlight"><pre><span></span><code>DB_CONNECTION = mongodb://localhost:27017/posts 
+PORT = 3000
+</code></pre></div>
+<h3 id="zusammenfassung-die-mongodb-posts">Zusammenfassung - die MongoDB <code>posts</code><a class="headerlink" href="#zusammenfassung-die-mongodb-posts" title="Permanent link">&para;</a></h3>
+<p>Hier einige Datensätze für die Datenbank <code>posts</code>:</p>
+<div class="tabbed-set" data-tabs="37:1"><input checked="checked" id="__tabbed_37_1" name="__tabbed_37" type="radio" /><label for="__tabbed_37_1">Collection posts</label><div class="tabbed-content"></div>
+</div>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;6278e79c6664ce70884dd0b0&quot;</span><span class="p">},</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;WH Eingang&quot;</span><span class="p">,</span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;Campus Wilhelminenhof&quot;</span><span class="p">,</span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="s2">&quot;1652090780364-jf-htwbild4.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;__v&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a0ff2305433d805b6b437&quot;</span><span class="p">},</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;HTW Gebäude C&quot;</span><span class="p">,</span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;Campus Wilhelminenhof&quot;</span><span class="p">,</span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="s2">&quot;1652166642127-jf-htwbild5.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;__v&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7cad8ae16b1ba5f62f76&quot;</span><span class="p">},</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;Mensastrand&quot;</span><span class="p">,</span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;Campus Wilhelminenhof Mensa&quot;</span><span class="p">,</span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="s2">&quot;1652194477890-jf-htwbild1.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;__v&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7cdf8ae16b1ba5f62f80&quot;</span><span class="p">},</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;Wiese Campus WH&quot;</span><span class="p">,</span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;Campus Wilhelminenhof Gebäude C&quot;</span><span class="p">,</span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="s2">&quot;1652194527176-jf-htwbild2.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;__v&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7d0b8ae16b1ba5f62f84&quot;</span><span class="p">},</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;Berühmt wegen FIW&quot;</span><span class="p">,</span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;Campus Wilhelminenhof Gebäude C&quot;</span><span class="p">,</span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="s2">&quot;1652194571822-jf-htwbild3.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;__v&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7d398ae16b1ba5f62f8b&quot;</span><span class="p">},</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;Haupttor HTW&quot;</span><span class="p">,</span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;Wilhelminenhofstraße HTW&quot;</span><span class="p">,</span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="s2">&quot;1652194617191-jf-htwbild4.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;__v&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7d608ae16b1ba5f62f8f&quot;</span><span class="p">},</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;Gebäude C&quot;</span><span class="p">,</span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="s2">&quot;HTW Berlin&quot;</span><span class="p">,</span><span class="nt">&quot;image_id&quot;</span><span class="p">:</span><span class="s2">&quot;1652194656102-jf-htwbild5.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;__v&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+</td></tr></table>
+<div class="tabbed-set" data-tabs="38:1"><input checked="checked" id="__tabbed_38_1" name="__tabbed_38" type="radio" /><label for="__tabbed_38_1">Collection posts.files</label><div class="tabbed-content"></div>
+</div>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;6278d47e96a41858d66f1621&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">984341</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-09T08:44:46.239Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652085886102-jf-htwbild1.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;6278d5f902370f2c675993e9&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">1601800</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-09T08:51:05.478Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652086265414-jf-htwbild2.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;6278db738d2b5bc5968f453e&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">1601800</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-09T09:14:27.957Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652087667872-jf-htwbild2.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;6278db918d2b5bc5968f4546&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">1601800</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-09T09:14:57.113Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652087697071-jf-htwbild2.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;6278dd057c648b9e8e3bbb74&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">117492</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-09T09:21:09.873Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652088069823-jf-htwbild3.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;6278e74458477bf1223fa286&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">1038579</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-09T10:04:53.07Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652090692995-jf-htwbild4.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;6278e79c6664ce70884dd0ab&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">1038579</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-09T10:06:20.437Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652090780364-jf-htwbild4.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a0ff2305433d805b6b435&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">25449</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-10T07:10:42.191Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652166642127-jf-htwbild5.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7cad8ae16b1ba5f62f71&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">984341</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-10T14:54:37.954Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652194477890-jf-htwbild1.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7cdf8ae16b1ba5f62f78&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">1601800</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-10T14:55:27.23Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652194527176-jf-htwbild2.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7d0b8ae16b1ba5f62f82&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">117492</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-10T14:56:11.84Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652194571822-jf-htwbild3.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7d398ae16b1ba5f62f86&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">1038579</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-10T14:56:57.214Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652194617191-jf-htwbild4.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+<span class="p">{</span><span class="nt">&quot;_id&quot;</span><span class="p">:{</span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="s2">&quot;627a7d608ae16b1ba5f62f8d&quot;</span><span class="p">},</span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="mi">25449</span><span class="p">,</span><span class="nt">&quot;chunkSize&quot;</span><span class="p">:</span><span class="mi">261120</span><span class="p">,</span><span class="nt">&quot;uploadDate&quot;</span><span class="p">:{</span><span class="nt">&quot;$date&quot;</span><span class="p">:</span><span class="s2">&quot;2022-05-10T14:57:36.11Z&quot;</span><span class="p">},</span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="s2">&quot;1652194656102-jf-htwbild5.jpg&quot;</span><span class="p">,</span><span class="nt">&quot;contentType&quot;</span><span class="p">:</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+</td></tr></table>
+<p>Die Collection <code>posts.chunks</code> ist sehr groß, deshalb <a href="../files/posts_chunks.json">hier zum Download</a>.</p>
                 
               
               

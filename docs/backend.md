@@ -781,6 +781,9 @@ Mehr zum CORS-Paket von node.js bzw. express finden Sie [hier](https://expressjs
 
 Bis jetzt haben wir nur Daten im JSON-Format zwischen Frontend und Backend ausgetauscht und auch nur solche Daten in der MongoDB gespeichert. Bilder (und auch andere Dateien) sind [FormData-Objects](https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects) im `multipart/form-data`-Format. Zur Behandlung solcher Daten verwenden wir ein *Middleware* für unser Backend, namens [Multer](https://www.npmjs.com/package/multer). 
 
+!!! hint
+		Wenn Sie nur am Code für unser Backend interessiert sind, dann können Sie auch direkt zu [Zusammenführen der Funktionalitäten](./#zusammenfuhren-der-funktionalitaten) springen. Im Folgenden werden die Entstehung aber näher erläutert und verschiedene Varianten diskutiert. 
+
 MongoDB speichert Daten bis zu einer Größe von `16Mb` im Binärformat. Um auch größere Dateien (Bilder, Videos, pdf, ...) speichern zu können, werden die Dateien in *chunks* zerlegt und können dann aus diesen Stücken wieder zusammengesetzt werden. Dafür gibt es in der MongoDB eine [GridFS](https://docs.mongodb.com/manual/core/gridfs/)-Spezifikation (siehe auch [hier](https://medium.com/@kavitanambissan/uploading-and-retrieving-a-file-from-gridfs-using-multer-958dfc9255e8) oder [hier](https://www.topcoder.com/thrive/articles/storing-large-files-in-mongodb-using-gridfs)). Zur Verwendung von GridFS gibt es die beiden Pakte [multer-gridfs-storage](https://www.npmjs.com/package/multer-gridfs-storage) und [gridfs-stream](https://www.npmjs.com/package/gridfs-stream). 
 
 Wir installieren im Backend-Projekt alle drei Pakete und zeigen im Folgenden deren Verwendung:
@@ -1377,6 +1380,42 @@ Wir haben nun recht viele Routen und Endpunkte in unserem Backend. Wir wollen ab
 
 Das bedeutet, wir binden den Upload und Download von Bildern nun in unsere `posts`-Routen ein. Die Funktionen werden dabei "etwas" umfangreicher. 
 
+### Zum Verständnis
+
+Wir verwenden [Multer](https://www.npmjs.com/package/multer) und [GridFs storage](https://www.npmjs.com/package/multer-gridfs-storage). Multer ist eine *Middleware* für Node.js, um Daten im `multipart/form-data`-Format zu verwalten. Die grundsätzliche Idee ist, dass im *Request* nicht nur ein `body`, sondern auch eine `file`-Eigenschaft enthalten ist (neben dem `header`). Multer verwendet einen `storage`, um Bilder (oder andere Dateien) zu speichern. Einen solchen `storage` bietet `GridFs storage`. Dieser kann sogar Dateien größer als 16 MB speichern und die Idee dabei ist, dass die Datei in zwei Collections gespeichert wird, in der `files`-Collection, welche die (Meta-)Informationen der Datei speichert und der `chunks`-Collection, die die eigentliche Datei (als Binärdaten) speichert. Eine Datei kann dabei in mehrere `chunks` unterteilt werden. Die folgende Abbildung zeigt das Prinzip von `GridFS`:
+
+
+![upload](./files/251_file.png)
+
+Für unser Datenmodell sieht die Auteilung der Daten somit wie folgt aus:
+
+- in der `posts`-Collection speichern wir
+	- die `_id` des Posts,
+	- den `title` eines Posts,
+	- die `location` und 
+	- die `image_id`. Die `image_id` enthält den Dateinamen `filename` des Bildes.
+
+- in der `posts.files`-Collection speichern wir (GridFs)
+	- die `_id` der Datei,
+	- die `length` der Datei,
+	- die `chunkSize`, 
+	- das `uploadDate`, 
+	- den `filename` (siehe in `posts` die `image_id`) und 
+	- den `contenType` (z.B. `image/jpeg`)
+
+- in der `posts.chunks`-Collection speichern wir (GridFs)
+	- die `_id` des Chunks,
+	- die `files_id` (diese entspricht der `_id` der Datei in der `posts.files`-Collection),
+	- ein `n` (fortlaufende Nummerierung der Chunks einer Datei beginnend mit `0`),
+	- die `data` der Datei (in diesem Chunk)
+
+Chunks kann es zu einer Datei mehrere geben. Alle `data` aller Chunks einer Datei bilden zusammen die Datei als Binär- (bzw. base64-) Daten. Die folgende Abbildung zeigt unser Datenmodell in der Datenbank `posts`:
+
+
+![upload](./files/251_file.png)
+
+Um z.B. einen Datensatz (einen Post) anzulegen, speichern wir also die zugehörigen Daten in der `posts`-Collection (inkl. dem `filename` der Datei), speichern die Meta-Informationen der Datei in der `posts.files`-Collection und die zugehörigen Binärdaten der Datei in `posts.chunks`. 
+
 ### POST - kompletter Datensatz
 
 Die `POST`-Funktion für einen Datensatz ist nicht viel umfangreicher als zuvor:
@@ -1566,4 +1605,276 @@ router.get('/', async(req, res) => {
 });
 ``` 
 
+### DELETE - einen Datensatz
 
+Wird ein Post gelöscht, müssen wir auch dafür sorgen, dass das zugehörige Bild aus der `posts.files` und der `posts.chunks` gelöscht wird. Das Löschen ist also dreistufig:
+
+=== "aus routes/posts.routes.js"
+```js linenums="12"
+// DELETE one post via id
+router.delete('/:id', async(req, res) => {
+    try {
+        const post = await Post.findOne({ _id: req.params.id })
+        let fileName = post.image_id;
+        await Post.deleteOne({ _id: req.params.id });
+        await collectionFiles.find({filename: fileName}).toArray( async(err, docs) => {
+            await collectionChunks.deleteMany({files_id : docs[0]._id});
+        })
+        await collectionFiles.deleteOne({filename: fileName});
+        res.status(204).send()
+    } catch {
+        res.status(404)
+        res.send({ error: "Post does not exist!" })
+    }
+});
+```
+
+### Zusammenfassung - Code des Backends
+
+Hier nochmal alle wichtigen Dateien unseres Backends:
+
+
+=== "server.js"
+```js linenums="1"
+const express = require('express');
+const cors = require('cors');
+const postsRoutes = require('./routes/posts.routes');
+require('dotenv').config();
+const mongoose = require('mongoose');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use(cors());
+app.use('/posts', postsRoutes)
+
+app.listen(PORT, (error) => {
+    if(error) {
+        console.log(error)
+    } else {
+        console.log(`server running on http://localhost:${PORT}`);
+    }
+})
+
+/* die folgende Verbindung brauchen wir gar nicht, wird jeweils bei Bedarf erzeugt (mongoose) */
+mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(
+    () => console.log('connected to BD')
+).catch(
+    err => console.error(err, 'conncetion error')
+)
+
+const db = mongoose.connection;
+```
+=== "middleware/upload.js"
+```js linenums="1"
+const multer = require('multer');
+const { GridFsStorage } = require('multer-gridfs-storage');
+require('dotenv').config();
+
+const storage = new GridFsStorage({
+    url: process.env.DB_CONNECTION,
+    options: { useNewUrlParser: true, useUnifiedTopology: true },
+    file: (req, file) => {
+        const match = ["image/png", "image/jpg", "image/jpeg"];
+
+        if(match.indexOf(file.mimetype) === -1)
+        {
+            return `${Date.now()}-jf-${file.originalname}`;
+        }
+
+        console.log('store');
+        return {
+            bucketName: 'posts',
+            filename: `${Date.now()}-jf-${file.originalname}`, 
+            request: req
+        }
+    }
+})
+
+console.log('store', storage)
+
+module.exports = multer({ storage });
+```
+=== "routes/posts.routes.js"
+```js linenums="1"
+const express = require('express');
+const router = express.Router();
+const Post = require('../models/posts')
+const upload = require('../middleware/upload')
+const mongoose = require('mongoose')
+require('dotenv').config()
+
+/* ----------------- POST ---------------------------- */
+
+// POST one post
+router.post('/', upload.single('file'), async(req, res) => {
+    if(req.file === undefined)
+    {
+        return res.send({
+            "message": "no file selected"
+        })
+    } else {
+        const newPost = new Post({
+            title: req.body.title,
+            location: req.body.location,
+            image_id: req.file.filename
+        })
+        console.log('newPost', newPost)
+        await newPost.save();
+        res.send(newPost)
+    }
+})
+
+/* ----------------- GET ---------------------------- */
+
+const connect = mongoose.createConnection(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true });
+const collectionFiles = connect.collection('posts.files');
+const collectionChunks = connect.collection('posts.chunks');
+
+function getOnePost(id) {
+    return new Promise( async(resolve, reject) => {
+        try {
+            const post = await Post.findOne({ _id: id });
+            let fileName = post.image_id;
+
+            collectionFiles.find({filename: fileName}).toArray( async(err, docs) => {
+
+                // sort({n: 1}) --> die chunks nach Eigenschaft n aufsteigend sortieren
+                collectionChunks.find({files_id : docs[0]._id}).sort({n: 1}).toArray( (err, chunks) => {
+                    
+                    const fileData = [];
+                    for(let chunk of chunks)
+                    {
+                        // console.log('chunk._id', chunk._id)
+                        fileData.push(chunk.data.toString('base64'));
+                    }
+
+                    let base64file = 'data:' + docs[0].contentType + ';base64,' + fileData.join('');
+                    let getPost = new Post({
+                        "title": post.title,
+                        "location": post.location, 
+                        "image_id": base64file
+                    });
+
+                    resolve(getPost)
+                })
+
+            }) // toArray find filename
+
+        } catch {
+            reject(new Error("Post does not exist!"));
+        }
+    })
+}
+
+function getAllPosts() {
+    return new Promise( async(resolve, reject) => {
+        const sendAllPosts = [];
+        const allPosts = await Post.find();
+        try {
+            for(const post of allPosts) {
+                console.log('post', post)
+                const onePost = await getOnePost(post._id);
+                sendAllPosts.push(onePost);
+            }
+            console.log('sendAllPosts', sendAllPosts)
+            resolve(sendAllPosts)
+        } catch {
+                reject(new Error("Posts do not exist!"));
+        }
+    });
+}
+
+// GET one post via id
+router.get('/:id', async(req, res) => {
+    getOnePost(req.params.id)
+    .then( (post) => {
+        console.log('post', post);
+        res.send(post);
+    })
+    .catch( () => {
+        res.status(404);
+        res.send({
+            error: "Post does not exist!"
+        });
+    })
+});
+
+// GET all posts
+router.get('/', async(req, res) => {
+    
+    getAllPosts()
+    .then( (posts) => {
+        res.send(posts);
+    })
+    .catch( () => {
+        res.status(404);
+        res.send({
+            error: "Post do not exist!"
+        });
+    })
+});
+
+
+/* ----------------- DELETE ---------------------------- */
+
+// DELETE one post via id
+router.delete('/:id', async(req, res) => {
+    try {
+        const post = await Post.findOne({ _id: req.params.id })
+        let fileName = post.image_id;
+        await Post.deleteOne({ _id: req.params.id });
+        await collectionFiles.find({filename: fileName}).toArray( async(err, docs) => {
+            await collectionChunks.deleteMany({files_id : docs[0]._id});
+        })
+        await collectionFiles.deleteOne({filename: fileName});
+        res.status(204).send()
+    } catch {
+        res.status(404)
+        res.send({ error: "Post does not exist!" })
+    }
+});
+
+module.exports = router;
+```
+=== ".env"
+```
+DB_CONNECTION = mongodb://localhost:27017/posts 
+PORT = 3000
+```
+
+### Zusammenfassung - die MongoDB `posts`
+
+Hier einige Datensätze für die Datenbank `posts`:
+
+=== "Collection posts"
+```json linenums="1"
+{"_id":{"$oid":"6278e79c6664ce70884dd0b0"},"title":"WH Eingang","location":"Campus Wilhelminenhof","image_id":"1652090780364-jf-htwbild4.jpg","__v":0}
+{"_id":{"$oid":"627a0ff2305433d805b6b437"},"title":"HTW Gebäude C","location":"Campus Wilhelminenhof","image_id":"1652166642127-jf-htwbild5.jpg","__v":0}
+{"_id":{"$oid":"627a7cad8ae16b1ba5f62f76"},"title":"Mensastrand","location":"Campus Wilhelminenhof Mensa","image_id":"1652194477890-jf-htwbild1.jpg","__v":0}
+{"_id":{"$oid":"627a7cdf8ae16b1ba5f62f80"},"title":"Wiese Campus WH","location":"Campus Wilhelminenhof Gebäude C","image_id":"1652194527176-jf-htwbild2.jpg","__v":0}
+{"_id":{"$oid":"627a7d0b8ae16b1ba5f62f84"},"title":"Berühmt wegen FIW","location":"Campus Wilhelminenhof Gebäude C","image_id":"1652194571822-jf-htwbild3.jpg","__v":0}
+{"_id":{"$oid":"627a7d398ae16b1ba5f62f8b"},"title":"Haupttor HTW","location":"Wilhelminenhofstraße HTW","image_id":"1652194617191-jf-htwbild4.jpg","__v":0}
+{"_id":{"$oid":"627a7d608ae16b1ba5f62f8f"},"title":"Gebäude C","location":"HTW Berlin","image_id":"1652194656102-jf-htwbild5.jpg","__v":0}
+```
+
+=== "Collection posts.files"
+```json linenums="1"
+{"_id":{"$oid":"6278d47e96a41858d66f1621"},"length":984341,"chunkSize":261120,"uploadDate":{"$date":"2022-05-09T08:44:46.239Z"},"filename":"1652085886102-jf-htwbild1.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"6278d5f902370f2c675993e9"},"length":1601800,"chunkSize":261120,"uploadDate":{"$date":"2022-05-09T08:51:05.478Z"},"filename":"1652086265414-jf-htwbild2.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"6278db738d2b5bc5968f453e"},"length":1601800,"chunkSize":261120,"uploadDate":{"$date":"2022-05-09T09:14:27.957Z"},"filename":"1652087667872-jf-htwbild2.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"6278db918d2b5bc5968f4546"},"length":1601800,"chunkSize":261120,"uploadDate":{"$date":"2022-05-09T09:14:57.113Z"},"filename":"1652087697071-jf-htwbild2.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"6278dd057c648b9e8e3bbb74"},"length":117492,"chunkSize":261120,"uploadDate":{"$date":"2022-05-09T09:21:09.873Z"},"filename":"1652088069823-jf-htwbild3.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"6278e74458477bf1223fa286"},"length":1038579,"chunkSize":261120,"uploadDate":{"$date":"2022-05-09T10:04:53.07Z"},"filename":"1652090692995-jf-htwbild4.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"6278e79c6664ce70884dd0ab"},"length":1038579,"chunkSize":261120,"uploadDate":{"$date":"2022-05-09T10:06:20.437Z"},"filename":"1652090780364-jf-htwbild4.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"627a0ff2305433d805b6b435"},"length":25449,"chunkSize":261120,"uploadDate":{"$date":"2022-05-10T07:10:42.191Z"},"filename":"1652166642127-jf-htwbild5.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"627a7cad8ae16b1ba5f62f71"},"length":984341,"chunkSize":261120,"uploadDate":{"$date":"2022-05-10T14:54:37.954Z"},"filename":"1652194477890-jf-htwbild1.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"627a7cdf8ae16b1ba5f62f78"},"length":1601800,"chunkSize":261120,"uploadDate":{"$date":"2022-05-10T14:55:27.23Z"},"filename":"1652194527176-jf-htwbild2.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"627a7d0b8ae16b1ba5f62f82"},"length":117492,"chunkSize":261120,"uploadDate":{"$date":"2022-05-10T14:56:11.84Z"},"filename":"1652194571822-jf-htwbild3.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"627a7d398ae16b1ba5f62f86"},"length":1038579,"chunkSize":261120,"uploadDate":{"$date":"2022-05-10T14:56:57.214Z"},"filename":"1652194617191-jf-htwbild4.jpg","contentType":"image/jpeg"}
+{"_id":{"$oid":"627a7d608ae16b1ba5f62f8d"},"length":25449,"chunkSize":261120,"uploadDate":{"$date":"2022-05-10T14:57:36.11Z"},"filename":"1652194656102-jf-htwbild5.jpg","contentType":"image/jpeg"}
+```
+
+Die Collection `posts.chunks` ist sehr groß, deshalb [hier zum Download](./files/posts_chunks.json).
