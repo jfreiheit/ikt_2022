@@ -186,7 +186,7 @@ Im Service Worker haben wir normalerweise keinen direkten Zugriff auf die Skript
 
 === "public/sw.js"
     ```js linenums="1" hl_lines="1 18"
-    importScripts('/src/js/db.js');
+    importScripts('/src/js/idb.js');
 
     const CURRENT_STATIC_CACHE = 'static-v3';
     const CURRENT_DYNAMIC_CACHE = 'dynamic-v3';
@@ -260,7 +260,7 @@ Wir führen zunächst noch einige Änderungen in unserer Service Worker Datei `s
 
 === "public/sw.js"
     ```js linenums="1" hl_lines="5 18 26"
-        importScripts('/src/js/db.js');
+        importScripts('/src/js/idb.js');
 
         const CURRENT_STATIC_CACHE = 'static-v3';
         const CURRENT_DYNAMIC_CACHE = 'dynamic-v3';
@@ -755,7 +755,7 @@ In die `sw.js` setzen wir noch den Aufruf von `writeData('posts', data[key])` an
 Dazu erweitern wir die `db.js` zunächst um eine `readAllData(store)`-Funktion, in der wir alle Daten aus der IndexedDB auslesen.
 
 === "/public/src/js/db.js"
-    ```js linenums="1" hl_lines="15 16 18-20"
+    ```js linenums="1" hl_lines="26-33"
         const db = idb.openDB('posts-store', 1, {
             upgrade(db) {
                 // Create a store of objects

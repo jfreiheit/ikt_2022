@@ -15,9 +15,9 @@ Nachfolgend der vorläufige Wochenplan (wird eventuell angepasst). Die Vorlesung
 | 3. | 18.-22.04.2022 | Service workers | Übung 2 | - | 07.05.2022 | 
 | 4. | 25.-29.04.2022 | Promises und Fetch API | Übung 3 | - | 14.05.2022 | 
 | 5. | 02.-06.05.2022 | Service workers und Caching | - | - | 21.05.2022 | 
-| 6. | 09.-13.05.2022 | Entwicklungsinfrastruktur | Übung 4 | - | 28.05.2022 | 
-| 7. | 16.-20.05.2022 | Datenbank und Backend | Übung 5 | - | 04.06.2022 | 
-| 8. | 23.-27.05.2022 | Frontend mit Backend-Anbindung | Übung 6 | - | 11.06.2022 | 
+| 6. | 09.-13.05.2022 | MongoDB und Backend | Übung 4 | - | 28.05.2022 | 
+| 7. | 16.-20.05.2022 | Bilder-Up- und Download (Backend) | Übung 5 | - | 04.06.2022 | 
+| 8. | 23.-27.05.2022 | IndexedDB | Übung 6 | - | 11.06.2022 | 
 | 9. | 30.-03.06.2022 | Caching dynamische Daten mit IndexDB | Übung 7 | - | 18.06.2022 | 
 | 10. | 06.-10.06.2022 | Hintergrundsynchronisation | - | Datenbank | - | 
 | 11. | 13.-17.06.2022 | Push-Notifikationen | - | Backend | - | 

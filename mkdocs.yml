@@ -68,5 +68,6 @@ nav:
     - Caching: caching.md 
     - Backend: backend.md 
     - IndexedDB: indexeddb.md 
+    - Kamera: kamera.md 
     - Tools: tools.md 
 

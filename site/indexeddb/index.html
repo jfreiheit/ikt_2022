@@ -435,6 +435,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../kamera/" class="md-nav__link">
+        Kamera
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tools/" class="md-nav__link">
         Tools
       </a>
@@ -863,7 +878,7 @@ Das Testen der neuen Implementierung erfordert nun also immer das Ändern der Ca
 <span class="normal">65</span>
 <span class="normal">66</span>
 <span class="normal">67</span>
-<span class="normal">68</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="nx">importScripts</span><span class="p">(</span><span class="s1">&#39;/src/js/db.js&#39;</span><span class="p">);</span>
+<span class="normal">68</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="hll"><span class="nx">importScripts</span><span class="p">(</span><span class="s1">&#39;/src/js/idb.js&#39;</span><span class="p">);</span>
 </span>
 <span class="kd">const</span> <span class="nx">CURRENT_STATIC_CACHE</span> <span class="o">=</span> <span class="s1">&#39;static-v3&#39;</span><span class="p">;</span>
 <span class="kd">const</span> <span class="nx">CURRENT_DYNAMIC_CACHE</span> <span class="o">=</span> <span class="s1">&#39;dynamic-v3&#39;</span><span class="p">;</span>
@@ -967,7 +982,7 @@ Das Testen der neuen Implementierung erfordert nun also immer das Ändern der Ca
 <span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code>    <span class="nx">importScripts</span><span class="p">(</span><span class="s1">&#39;/src/js/db.js&#39;</span><span class="p">);</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code>    <span class="nx">importScripts</span><span class="p">(</span><span class="s1">&#39;/src/js/idb.js&#39;</span><span class="p">);</span>
 
     <span class="kd">const</span> <span class="nx">CURRENT_STATIC_CACHE</span> <span class="o">=</span> <span class="s1">&#39;static-v3&#39;</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">CURRENT_DYNAMIC_CACHE</span> <span class="o">=</span> <span class="s1">&#39;dynamic-v3&#39;</span><span class="p">;</span>
@@ -1816,26 +1831,26 @@ Das Testen der neuen Implementierung erfordert nun also immer das Ändern der Ca
         <span class="p">},</span>
     <span class="p">});</span>
 
-<span class="hll">    <span class="kd">function</span> <span class="nx">writeData</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class="hll">        <span class="k">return</span> <span class="nx">db</span>
-</span>            <span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="nx">dbPosts</span> <span class="p">=&gt;</span> <span class="p">{</span>
-<span class="hll">                <span class="kd">let</span> <span class="nx">tx</span> <span class="o">=</span> <span class="nx">dbPosts</span><span class="p">.</span><span class="nx">transaction</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="s1">&#39;readwrite&#39;</span><span class="p">);</span>
-</span><span class="hll">                <span class="kd">let</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">objectStore</span><span class="p">(</span><span class="nx">st</span><span class="p">);</span>
-</span><span class="hll">                <span class="nx">store</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-</span>                <span class="k">return</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">done</span><span class="p">;</span>
-            <span class="p">})</span>
-    <span class="p">}</span>
-
-
-    <span class="kd">function</span> <span class="nx">readAllData</span><span class="p">(</span><span class="nx">st</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">writeData</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">db</span>
             <span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="nx">dbPosts</span> <span class="p">=&gt;</span> <span class="p">{</span>
-                <span class="kd">let</span> <span class="nx">tx</span> <span class="o">=</span> <span class="nx">dbPosts</span><span class="p">.</span><span class="nx">transaction</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="s1">&#39;readonly&#39;</span><span class="p">);</span>
+                <span class="kd">let</span> <span class="nx">tx</span> <span class="o">=</span> <span class="nx">dbPosts</span><span class="p">.</span><span class="nx">transaction</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="s1">&#39;readwrite&#39;</span><span class="p">);</span>
                 <span class="kd">let</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">objectStore</span><span class="p">(</span><span class="nx">st</span><span class="p">);</span>
-                <span class="k">return</span> <span class="nx">store</span><span class="p">.</span><span class="nx">getAll</span><span class="p">();</span>
+                <span class="nx">store</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+                <span class="k">return</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">done</span><span class="p">;</span>
             <span class="p">})</span>
     <span class="p">}</span>
-</code></pre></div>
+
+
+<span class="hll">    <span class="kd">function</span> <span class="nx">readAllData</span><span class="p">(</span><span class="nx">st</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="hll">        <span class="k">return</span> <span class="nx">db</span>
+</span><span class="hll">            <span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="nx">dbPosts</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span><span class="hll">                <span class="kd">let</span> <span class="nx">tx</span> <span class="o">=</span> <span class="nx">dbPosts</span><span class="p">.</span><span class="nx">transaction</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="s1">&#39;readonly&#39;</span><span class="p">);</span>
+</span><span class="hll">                <span class="kd">let</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">tx</span><span class="p">.</span><span class="nx">objectStore</span><span class="p">(</span><span class="nx">st</span><span class="p">);</span>
+</span><span class="hll">                <span class="k">return</span> <span class="nx">store</span><span class="p">.</span><span class="nx">getAll</span><span class="p">();</span>
+</span><span class="hll">            <span class="p">})</span>
+</span><span class="hll">    <span class="p">}</span>
+</span></code></pre></div>
 </td></tr></table>
 </div>
 </div>
@@ -2229,13 +2244,13 @@ Das Testen der neuen Implementierung erfordert nun also immer das Ändern der Ca
       
       
         
-        <a href="../tools/" class="md-footer__link md-footer__link--next" aria-label="Weiter: Tools" rel="next">
+        <a href="../kamera/" class="md-footer__link md-footer__link--next" aria-label="Weiter: Kamera" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Weiter
               </span>
-              Tools
+              Kamera
             </div>
           </div>
           <div class="md-footer__button md-icon">
