@@ -1492,7 +1492,11 @@ Jetzt den kompletten Datensatz mit einer bestimmten `_id` zu laden, ist etwas au
 Dazu schreiben wir uns zunächst eine Funktion `getOnePost(id)`, die ein `Promise` zurückgibt.
 
 === "aus routes/posts.routes.js"
-```js linenums="27"
+```js linenums="23"
+const connect = mongoose.createConnection(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true });
+const collectionFiles = connect.collection('posts.files');
+const collectionChunks = connect.collection('posts.chunks');
+
 function getOnePost(id) {
 	return new Promise( async(resolve, reject) => {
 		try {

@@ -3039,7 +3039,11 @@ Wir fügen <code>dotenv</code> in die <code>server.js</code> ein und greifen mit
 <p>Dazu schreiben wir uns zunächst eine Funktion <code>getOnePost(id)</code>, die ein <code>Promise</code> zurückgibt.</p>
 <div class="tabbed-set" data-tabs="28:1"><input checked="checked" id="__tabbed_28_1" name="__tabbed_28" type="radio" /><label for="__tabbed_28_1">aus routes/posts.routes.js</label><div class="tabbed-content"></div>
 </div>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
 <span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
@@ -3075,7 +3079,11 @@ Wir fügen <code>dotenv</code> in die <code>server.js</code> ein und greifen mit
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
-<span class="normal">63</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">function</span> <span class="nx">getOnePost</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">connect</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">createConnection</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">DB_CONNECTION</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useNewUrlParser</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">useUnifiedTopology</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+<span class="kd">const</span> <span class="nx">collectionFiles</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="s1">&#39;posts.files&#39;</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">collectionChunks</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="s1">&#39;posts.chunks&#39;</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">getOnePost</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="ow">new</span> <span class="nb">Promise</span><span class="p">(</span> <span class="k">async</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
         <span class="k">try</span> <span class="p">{</span>
             <span class="kd">const</span> <span class="nx">post</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Post</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span> <span class="nx">_id</span><span class="o">:</span> <span class="nx">id</span> <span class="p">});</span>
