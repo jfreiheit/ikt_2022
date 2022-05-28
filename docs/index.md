@@ -18,10 +18,10 @@ Nachfolgend der vorläufige Wochenplan (wird eventuell angepasst). Die Vorlesung
 | 6. | 09.-13.05.2022 | MongoDB und Backend | Übung 4 | - | 28.05.2022 | 
 | 7. | 16.-20.05.2022 | Bilder-Up- und Download (Backend) | Übung 5 | - | 04.06.2022 | 
 | 8. | 23.-27.05.2022 | IndexedDB | Übung 6 | - | 11.06.2022 | 
-| 9. | 30.-03.06.2022 | Caching dynamische Daten mit IndexDB | Übung 7 | - | 18.06.2022 | 
-| 10. | 06.-10.06.2022 | Hintergrundsynchronisation | - | Datenbank | - | 
-| 11. | 13.-17.06.2022 | Push-Notifikationen | - | Backend | - | 
-| 12. | 20.-24.06.2022 | Kamera und Geolocation | - | Backend | - |
+| 9. | 30.-03.06.2022 | Kamera | Übung 7 | - | 18.06.2022 | 
+| 10. | 06.-10.06.2022 | Geolocation | - | Datenbank | - | 
+| 11. | 13.-17.06.2022 | Hintergrundsynchronisation | - | Backend | - | 
+| 12. | 20.-24.06.2022 | Push-Notifikationen | - | Backend | - |
 | 13. | 27.-01.07.2022 | Wiederholung | - | Frontend | - |
 | 14. | 04.-08.07.2022 | Wiederholung | - | Frontend | - |
 |  |  |  |  | Abgabe 1.PZ 18.07.2022 | - |
@@ -73,6 +73,41 @@ Hier sind die Videos aus **2021** verlinkt!!! (auf Wunsch) Der aktuelle Stoff is
 	- Video zur Vorlesung am 12.05.2021
 		<iframe src="https://mediathek.htw-berlin.de/media/embed?key=bf498f35fe78e01a22d5fa909d4c4be8&width=720&height=389&autoplay=false&autolightsoff=false&loop=false&chapters=false&related=false&responsive=false&t=0" data-src="" class="iframeLoaded" width="720" height="389" frameborder="0" allowfullscreen="allowfullscreen" allowtransparency="true" scrolling="no"></iframe>
 	- Sourcecode zur Vorlesung am 12.05.2021 (also alt!!!) [hier zum Herunterladen](./files/04_caching.zip)
+
+
+##### Woche 5 (MongoDB und Backend)
+
+??? question "Woche 5 - MongoDB und Backend"
+
+	- Diese Woche erstellen wir mithilfe von Node.js ein [Backend](./backend/#backend-rest-server). Dieses realisiert eine REST-API, die alle CRUD-Funktionalitäten für unsere Posts auf einer MongoDB zur Verfügung stellt.
+
+
+##### Woche 6 (Bilder-Up- und Download im Backend)
+
+??? question "Woche 6 - Bilder-Up- und Download im Backend"
+
+	- Diese Woche erweitern wir mithilfe von Multer und GridFS unser [Backend - Erweiterung um das Speichern von Bildern](./backend/#erweiterung-um-das-speichern-von-bildern), um den Up- und Download von Bildern zu ermöglichen. 
+
+
+##### Woche 7 (IndexedDB)
+
+??? question "Woche 7 - IndexedDB"
+
+	- Diese Woche arbeiten wir am Frontend weiter. Wir [binden das Backend an](./indexeddb/#das-backend-nutzen) und speichern die Posts-Datensätze in der Browser-Built-In-Datenbank [IndexedDB](./indexeddb/#erstellen-und-offnen-einer-indexeddb). 
+
+
+##### Woche 8 (Kamera)
+
+??? question "Woche 8 - Kamera"
+
+	- Diese Woche nutzen wir die MediaDevices-API, um mithilfe der Kamera Fotos aufzunehmen, die Teil eines jeden Posts sind. Diese Fotos werden an das Backend übermittelt. 
+
+
+##### Woche 8 (Geolocation-API)
+
+??? question "Woche 9 - Geolocation-API"
+
+	- Diese Woche nutzen wir die Geolocation-API, um den eigenen Standort zu ermitteln. Dieser Standort wird verwendet, um die entsprechenden Adressinformationen als Lokation in unsere Posts einzutragen. Außerdem zeigen wir auf einer Landkarte diesen Standort an.
 
 
 

@@ -1,4 +1,4 @@
-# Gerätezugriffe
+# Gerätezugriffe - Kamera
 
 
 !!! hint
@@ -658,6 +658,36 @@ Das Hochladen einer Bilddatei kennen wir ja bereits von unserem anderen Frontend
 	    file = event.target.files[0];
 	});
 	```
+
+
+### Letzte Verbesserungen
+
+Ein Nachteil in unserer Anwendung ist noch, dass die Kamera die ganze Zeit läuft, wenn wir einmal den modalen Dialog zur Eingabe von daten geöffnet hatten. Wir sollten sie beim Ausschalten des modalen Dialoges schließen. Das Stoppen aller Videostreams hatten wir bereits für die Aufnahme des Fotos gemacht. Weil jedoch das Schließen und erneutes Öffnen der Kamera sehr ressourcenverbrauchend ist, laufen die Animationen für das Öffnen und Schließen des modalen Dialogs nicht mehr flüssig. Wir lagern diese Animationen deshalb in einen asynchronen "Thread" aus (ist nicht wirklich ein neuer Thread): 
+
+
+=== "public/src/js/feed.js"
+	```js linenums="80" hl_lines="2-4 15-20"
+	function openCreatePostModal() {
+	    setTimeout( () => {
+	        createPostArea.style.transform = 'translateY(0)';
+	    }, 1);
+	    initializeMedia();
+	}
+
+	function closeCreatePostModal() {
+	    imagePickerArea.style.display = 'none';
+	    videoPlayer.style.display = 'none';
+	    canvasElement.style.display = 'none';
+	    if(videoPlayer.srcObject) {
+	        videoPlayer.srcObject.getVideoTracks().forEach( track => track.stop());
+	    }
+	    setTimeout( () => {
+	        createPostArea.style.transform = 'translateY(100vH)';
+	    }, 1);
+	}
+	```
+
+Mithilfe des `timeout`-"Tricks" wird der modale Dialog fließend geschlossen und das Kamerazeichen im Tab des Browsers schließt asynchron etwas später. 
 
 !!! success
 	Wir können nun Fotos mit der Kamera aufnehmen und die Bilder als Post an das Backend senden, wo es in die Datenbank gespeichert wird!

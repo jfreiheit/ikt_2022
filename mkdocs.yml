@@ -69,5 +69,6 @@ nav:
     - Backend: backend.md 
     - IndexedDB: indexeddb.md 
     - Kamera: kamera.md 
+    - Geolocation: geolocation.md 
     - Tools: tools.md 
 
