@@ -163,7 +163,7 @@ Beim Speichern von dynamischen Inhalten mithilfe der In-Browser-IndexedDB spielt
 
 ### Das idb-Paket
 
-Da die API zur `IndexedDB` sehr umständlich zu handhaben ist und viele *Callbacks* erfordert, wird die Verwendung anderer Pakete empfohlen, die sich als *Wrapper* um die API legen und die Verwendung von Promises ermöglichen. Oft wird z.B. [Dexie](https://dexie.org/) verwendet. Wir verwenden zunächst den [idb-Warpper](https://github.com/jakearchibald/idb) von Jake Archibald. Ich verwende im Folgenden dieses [idb.js](./files/idb.js), das Sie sich <a href="./files/idb.js" download>hier</a> herunterladen und einfach in Ihren `/public/src/js`-Ordner kopieren können. 
+Da die API zur `IndexedDB` sehr umständlich zu handhaben ist und viele *Callbacks* erfordert, wird die Verwendung anderer Pakete empfohlen, die sich als *Wrapper* um die API legen und die Verwendung von Promises ermöglichen. Oft wird z.B. [Dexie](https://dexie.org/) verwendet. Wir verwenden zunächst den [idb-Wrapper](https://github.com/jakearchibald/idb) von Jake Archibald. Ich verwende im Folgenden dieses [idb.js](./files/idb.js), das Sie sich <a href="./files/idb.js" download>hier</a> herunterladen und einfach in Ihren `/public/src/js`-Ordner kopieren können. 
 
 ![indexeddb](./files/65_indexdb.png)
 

@@ -24,8 +24,8 @@ Nachfolgend der vorläufige Wochenplan (wird eventuell angepasst). Die Vorlesung
 | 12. | 20.-24.06.2022 | Push-Notifikationen | - | Backend | - |
 | 13. | 27.-01.07.2022 | Wiederholung | - | Frontend | - |
 | 14. | 04.-08.07.2022 | Wiederholung | - | Frontend | - |
-|  |  |  |  | Abgabe 1.PZ 18.07.2022 | - |
-|  |  |  |  | Abgabe 2.PZ 01.10.2022 | - |
+|  |  |  |  | Abgabe 1.PZ 25.07.2022 | - |
+|  |  |  |  | Abgabe 2.PZ 26.09.2022 | - |
 
 ### Organisatorisches 
 
@@ -103,11 +103,18 @@ Hier sind die Videos aus **2021** verlinkt!!! (auf Wunsch) Der aktuelle Stoff is
 	- Diese Woche nutzen wir die MediaDevices-API, um mithilfe der Kamera Fotos aufzunehmen, die Teil eines jeden Posts sind. Diese Fotos werden an das Backend übermittelt. 
 
 
-##### Woche 8 (Geolocation-API)
+##### Woche 9 (Geolocation-API)
 
 ??? question "Woche 9 - Geolocation-API"
 
 	- Diese Woche nutzen wir die Geolocation-API, um den eigenen Standort zu ermitteln. Dieser Standort wird verwendet, um die entsprechenden Adressinformationen als Lokation in unsere Posts einzutragen. Außerdem zeigen wir auf einer Landkarte diesen Standort an.
+
+
+##### Woche 10 (Hintergrundsynchronisation)
+
+??? question "Woche 10 - Hintergrundsynchronisation"
+
+	- Diese Woche wird der Post, den wir in das Formular eingeben, nicht direkt an das Backend gesendet, sondern zunächst in der IndexedDB abgelegt. Dort bleibt er solange, bis das Backend erreichbar ist. Dazu wird die SyncManager-API verwendet. Beim Service Worker wird eine Sync Task registriert. Diese wird ausgelöst, sobald die Anwendung online ist.
 
 
 

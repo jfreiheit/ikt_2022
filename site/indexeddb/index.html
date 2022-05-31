@@ -465,6 +465,21 @@
   
   
     <li class="md-nav__item">
+      <a href="../backgroundsync/" class="md-nav__link">
+        Hintergrundsynchronisation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../tools/" class="md-nav__link">
         Tools
       </a>
@@ -803,7 +818,7 @@ Das Testen der neuen Implementierung erfordert nun also immer das Ändern der Ca
 <p><em>Dynamic caching</em> haben wir bis jetzt durchgeführt. Die Webanwendung stellt eine Anfrage an den Webserver, der Service Worker schaltet sich jedoch als Proxy dazwischen. Wenn der Service Worker die Anfrage selbst aus dem Cache beantworten kann, wird sie gar nicht erst an den Webserver weitergeleitet. Wenn nicht, dann geht die Anfrage zum Webserver, der schickt eine Antwort zurück, die der Service Worker aber auch in seinen dynamischen Cache ablegt, um sie beim nächsten Mal aus dem Cache beantworten zu können. Beim <em>dynamic caching</em> werden also dynamisch Ressourcen im Cache abgelegt. </p>
 <p>Beim Speichern von dynamischen Inhalten mithilfe der In-Browser-IndexedDB spielt die Fetch-API keine Rolle. es geht auch nicht darum, Ressourcen, wie html-, css, oder js-Dateien zu speichern. Vielmehr werden in der Datenbank strukturierte (aber auch unstrukturierte) Daten, wie JSON- oder XML-Daten gespeichert. Prinzipiell geht es um das Speichern von <em>Schlüssel-Werte-Paaren</em>. Primär handelt es sich bei den Daten in der IndexedDB aber um dynamische, sich häufig ändernde Daten - <em>dynamic content</em>. Während wir beim <em>dynamic caching</em> eher davon ausgehen, Ressourcen zu speichern, die sich nicht häufig ändern, ist das bei der IndexedDB anders. Dort gehen wir davon aus, dass sich diese Daten häufig ändern. Ein weiterer Unterschied liegt darin, dass wir mit <em>dynamic caching</em> stets nur vollständige <em>Responses</em> speichern, also eine Ressource ganz oder gar nicht. Das muss in der IndexedDB nicht sein. Wir könnten in der IndexedDB z.B. von einem <code>Post</code> immer nur <code>post.title</code> und <code>post.location</code> speichern, nicht aber <code>post.image_id</code> (oder umgekehrt). Außerdem lassen sich die Daten in der IndexedDB auch ändern oder in ein anderes Format umwandeln. Wir haben in Bezug auf die gespeicherten Ressourcen in der IndexedDB mehr Flexibilität.  </p>
 <h3 id="das-idb-paket">Das idb-Paket<a class="headerlink" href="#das-idb-paket" title="Permanent link">&para;</a></h3>
-<p>Da die API zur <code>IndexedDB</code> sehr umständlich zu handhaben ist und viele <em>Callbacks</em> erfordert, wird die Verwendung anderer Pakete empfohlen, die sich als <em>Wrapper</em> um die API legen und die Verwendung von Promises ermöglichen. Oft wird z.B. <a href="https://dexie.org/">Dexie</a> verwendet. Wir verwenden zunächst den <a href="https://github.com/jakearchibald/idb">idb-Warpper</a> von Jake Archibald. Ich verwende im Folgenden dieses <a href="../files/idb.js">idb.js</a>, das Sie sich <a href="./files/idb.js" download>hier</a> herunterladen und einfach in Ihren <code>/public/src/js</code>-Ordner kopieren können. </p>
+<p>Da die API zur <code>IndexedDB</code> sehr umständlich zu handhaben ist und viele <em>Callbacks</em> erfordert, wird die Verwendung anderer Pakete empfohlen, die sich als <em>Wrapper</em> um die API legen und die Verwendung von Promises ermöglichen. Oft wird z.B. <a href="https://dexie.org/">Dexie</a> verwendet. Wir verwenden zunächst den <a href="https://github.com/jakearchibald/idb">idb-Wrapper</a> von Jake Archibald. Ich verwende im Folgenden dieses <a href="../files/idb.js">idb.js</a>, das Sie sich <a href="./files/idb.js" download>hier</a> herunterladen und einfach in Ihren <code>/public/src/js</code>-Ordner kopieren können. </p>
 <p><img alt="indexeddb" src="../files/65_indexdb.png" /></p>
 <p>Diese Datei binden wir zunächst über die <code>index.html</code>-Datei ein:</p>
 <div class="tabbed-set" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">index.html</label><div class="tabbed-content">
