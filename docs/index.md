@@ -8,24 +8,24 @@ Wir beschäftigen uns dieses Semester mit *Progressive Web Apps (PWA)*. Dieser B
 
 Nachfolgend der vorläufige Wochenplan (wird eventuell angepasst). Die Vorlesungsvideos finden Sie darunter für die einzelnen Wochen (unter [**Inhalte**](http://freiheit.f4.htw-berlin.de/ikt/#inhalte)).
 
-| | Woche | Themen (Vorlesung) | Übung | Aufgabe (Stand) | Abgabe Übung bis | 
-|-|-------|--------------------|-------|-----------------|------------------|
-| 1. | 04.-08.04.2022 | Einführung und Organisatorisches | - | - | - | 
-| 2. | 11.-15.04.2022 | Grundgerüst und Application Manifest | Übung 1 | - | 30.04.2022 | 
-| 3. | 18.-22.04.2022 | Service workers | Übung 2 | - | 07.05.2022 | 
-| 4. | 25.-29.04.2022 | Promises und Fetch API | Übung 3 | - | 14.05.2022 | 
-| 5. | 02.-06.05.2022 | Service workers und Caching | - | - | 21.05.2022 | 
-| 6. | 09.-13.05.2022 | MongoDB und Backend | Übung 4 | - | 28.05.2022 | 
-| 7. | 16.-20.05.2022 | Bilder-Up- und Download (Backend) | Übung 5 | - | 04.06.2022 | 
-| 8. | 23.-27.05.2022 | IndexedDB | Übung 6 | - | 11.06.2022 | 
-| 9. | 30.-03.06.2022 | Kamera | Übung 7 | - | 18.06.2022 | 
-| 10. | 06.-10.06.2022 | Geolocation | - | Datenbank | - | 
-| 11. | 13.-17.06.2022 | Hintergrundsynchronisation | - | Backend | - | 
-| 12. | 20.-24.06.2022 | Push-Notifikationen | - | Backend | - |
-| 13. | 27.-01.07.2022 | Wiederholung | - | Frontend | - |
-| 14. | 04.-08.07.2022 | Wiederholung | - | Frontend | - |
-|  |  |  |  | Abgabe 1.PZ 25.07.2022 | - |
-|  |  |  |  | Abgabe 2.PZ 26.09.2022 | - |
+| | Woche | Themen (Vorlesung) |  Aufgabe (Stand) | Abgabe Übung bis | 
+|-|-------|--------------------|-----------------|------------------|
+| 1. | 04.-08.04.2022 | Einführung und Organisatorisches |  - | - | 
+| 2. | 11.-15.04.2022 | Grundgerüst und Application Manifest |  - | 30.04.2022 | 
+| 3. | 18.-22.04.2022 | Service workers |  - | 07.05.2022 | 
+| 4. | 25.-29.04.2022 | Promises und Fetch API |  - | 14.05.2022 | 
+| 5. | 02.-06.05.2022 | Service workers und Caching |  - | 21.05.2022 | 
+| 6. | 09.-13.05.2022 | MongoDB und Backend |  - | 28.05.2022 | 
+| 7. | 16.-20.05.2022 | Bilder-Up- und Download (Backend) |  - | 04.06.2022 | 
+| 8. | 23.-27.05.2022 | IndexedDB |  - | 11.06.2022 | 
+| 9. | 30.-03.06.2022 | Kamera |  - | 18.06.2022 | 
+| 10. | 06.-10.06.2022 | Geolocation |  Datenbank | - | 
+| 11. | 13.-17.06.2022 | Hintergrundsynchronisation |  Backend | - | 
+| 12. | 20.-24.06.2022 | Push-Notifikationen |  Backend | - |
+| 13. | 27.-01.07.2022 | Wiederholung |  Frontend | - |
+| 14. | 04.-08.07.2022 | Wiederholung |  Frontend | - |
+|  |  |  | Abgabe 1.PZ 25.07.2022 | - |
+|  |  |  | Abgabe 2.PZ 26.09.2022 | - |
 
 ### Organisatorisches 
 
@@ -115,6 +115,8 @@ Hier sind die Videos aus **2021** verlinkt!!! (auf Wunsch) Der aktuelle Stoff is
 ??? question "Woche 10 - Hintergrundsynchronisation"
 
 	- Diese Woche wird der Post, den wir in das Formular eingeben, nicht direkt an das Backend gesendet, sondern zunächst in der IndexedDB abgelegt. Dort bleibt er solange, bis das Backend erreichbar ist. Dazu wird die SyncManager-API verwendet. Beim Service Worker wird eine Sync Task registriert. Diese wird ausgelöst, sobald die Anwendung online ist.
+	- Video aus der Vorlesung:
+		<iframe src="https://mediathek.htw-berlin.de/media/embed?key=41dea6287b458d7cb58818247711f4b0&width=720&height=420&autoplay=false&controls=true&autolightsoff=false&loop=false&chapters=false&playlist=false&related=false&responsive=false&t=0&loadonclick=true&thumb=true" data-src="https://mediathek.htw-berlin.de/media/embed?key=41dea6287b458d7cb58818247711f4b0&width=720&height=420&autoplay=false&controls=true&autolightsoff=false&loop=false&chapters=false&playlist=false&related=false&responsive=false&t=0&loadonclick=true" class="" width="720" height="420" frameborder="0" allowfullscreen="allowfullscreen" allowtransparency="true" scrolling="no" aria-label="media embed code" style=""></iframe>
 
 
 
