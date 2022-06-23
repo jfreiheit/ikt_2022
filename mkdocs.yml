@@ -71,5 +71,6 @@ nav:
     - Kamera: kamera.md 
     - Geolocation: geolocation.md 
     - Hintergrundsynchronisation: backgroundsync.md 
+    - Push Notifications: pushnotes.md 
     - Tools: tools.md 
 
